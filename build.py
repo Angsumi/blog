@@ -14,6 +14,7 @@ ROOT = Path(__file__).parent
 OUT = ROOT / 'dist'
 BLOG = 'https://blog.angsumi.online/'
 MAIN = 'https://angsumi.online/'
+BING_AUTH = '78AF9220F7693CAAEB5CBEA511CAD825'  # Bing Webmaster site verification
 PERSON = {'@id': MAIN + '#person'}
 ORG = {'@type': 'Organization', '@id': MAIN + '#organization', 'name': 'ANGSUMI', 'url': MAIN, 'logo': MAIN + 'logo.png'}
 
@@ -122,6 +123,7 @@ def build():
     # Consumed by angsumi.online at build time (homepage "From the blog", service cluster links, llms.txt, /blog/ stubs).
     (OUT / 'posts.json').write_text(json.dumps([{k: p[k] for k in ('slug', 'title', 'description', 'date', 'updated', 'cluster', 'service', 'guide')} | {'url': BLOG + p['slug'] + '/'} for p in posts], indent=1) + '\n')
     (OUT / 'CNAME').write_text('blog.angsumi.online\n')
+    (OUT / 'BingSiteAuth.xml').write_text(f'<?xml version="1.0"?>\n<users><user>{BING_AUTH}</user></users>\n')
     (OUT / '404.html').write_text((OUT / 'index.html').read_text().replace('<head>', '<head><meta name="robots" content="noindex">', 1))
     print(f'dist/: {len(posts)} posts, index, feed, sitemap, posts.json')
 
